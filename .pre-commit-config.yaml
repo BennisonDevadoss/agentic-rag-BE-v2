@@ -16,6 +16,7 @@ repos:
     rev: 6.1.0
     hooks:
       - id: flake8
+        args: ["--exclude=alembic/env.py"]
         additional_dependencies:
           - flake8-print
   - repo: https://github.com/PyCQA/isort
@@ -30,4 +31,4 @@ repos:
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.1
     hooks:
-    -   id: pyupgrade
+      - id: pyupgrade
