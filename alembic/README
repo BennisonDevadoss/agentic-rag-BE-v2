@@ -1,1 +1,97 @@
-Generic single-database configuration.
+# Alembic Setup and Migration Management
+
+## Configuration
+
+To configure the database URL, add the following line to `env.py`:
+
+```python
+config.set_main_option("sqlalchemy.url", os.environ.get("DATABASE_URL"))
+```
+
+## Common Alembic Commands
+
+- **Generate Migration File with Autogenerate:**
+
+  ```bash
+  alembic revision --autogenerate -m "migration message"
+  ```
+
+- **Generate Empty Migration File:**
+
+  ```bash
+  alembic revision -m "migration message"
+  ```
+
+- **Run Migration (Upgrade Database to Latest Version):**
+
+  ```bash
+  alembic upgrade head
+  ```
+
+- **Downgrade to a Specific Migration:**
+  ```bash
+  alembic downgrade <downgrade_revision_id>
+  ```
+  > _Tip: Get the `downgrade_revision_id` from your Alembic migration files._
+
+## Resolving Multiple Head Revisions Error
+
+If you encounter the following error when running `alembic upgrade head`:
+
+```
+ERROR [alembic.util.messaging] Multiple head revisions are present for given argument 'head'; ...
+```
+
+### Steps to Fix:
+
+1. **Identify Multiple Heads:**
+
+   ```bash
+   alembic heads
+   ```
+
+2. **Merge Heads:**
+
+   ```bash
+   alembic merge <revision_id1> <revision_id2>
+   ```
+
+3. **Apply the Merged Migration:**
+
+   ```bash
+   alembic upgrade head
+   ```
+
+4. **Verify the Current Revision:**
+   ```bash
+   alembic current
+   ```
+
+### Example:
+
+1. Check for multiple heads:
+
+   ```bash
+   alembic heads
+   ```
+
+2. Merge the heads:
+
+   ```bash
+   alembic merge 12345abcde 67890fghij
+   ```
+
+3. Apply the upgrade:
+
+   ```bash
+   alembic upgrade head
+   ```
+
+4. Check the status:
+   ```bash
+   alembic current
+   ```
+
+## References
+
+- [Alembic Documentation](https://alembic.sqlalchemy.org/en/latest/)
