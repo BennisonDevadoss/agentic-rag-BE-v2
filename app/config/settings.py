@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     BACKEND_URL: AnyHttpUrl = Field(default="http://localhost:4000")
     DATABASE_URL: PostgresDsn
     ALLOWED_ORIGIN: str = Field(default="*")
+    SHOW_SQL_ALCHEMY_QUERIES: bool = True
 
 
 SETTINGS = Settings()
