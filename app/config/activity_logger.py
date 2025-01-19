@@ -1,8 +1,9 @@
 import sys
 from typing import Any
 
-from config.models import User
 from loguru import logger
+
+from config.models import User
 
 
 def configure_activity_logger() -> None:
@@ -28,7 +29,7 @@ def log_activity(user: User, resource: Any, resource_name: str, action: str) -> 
     logger.info(
         {
             "type": "ActivityLog",
-            "currentUser": user_log_details,
+            "current_user": user_log_details,
             resource_name: resource,
         },
         activity_message,

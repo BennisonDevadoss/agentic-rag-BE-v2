@@ -1,10 +1,12 @@
 import uvicorn
-from config.constants import ENVIRONMENT_TYPE
-from config.cors_options import configure_cors
-from config.settings import SETTINGS
-from exceptions.http_exception_filter import register_exception_handlers
 from fastapi import FastAPI
+
+from config.logger import logger
+from config.settings import SETTINGS
+from config.constants import ENVIRONMENT_TYPE
 from routers.v1.router import v1_router
+from config.cors_options import configure_cors
+from exceptions.http_exception_filter import register_exception_handlers
 
 
 # Create and configure the FastAPI application
@@ -43,10 +45,12 @@ async def root() -> dict[str, str]:
 
 # Run the application with uvicorn
 if __name__ == "__main__":
+    logger.info(f"Server listening at http://{SETTINGS.HOST}:{SETTINGS.PORT}")
     uvicorn.run(
         "main:app",
         host=SETTINGS.HOST,
         port=SETTINGS.PORT,
         reload=SETTINGS.ENVIRONMENT != ENVIRONMENT_TYPE.PRODUCTION,
         workers=1,
+        logger="info",
     )
