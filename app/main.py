@@ -52,5 +52,5 @@ if __name__ == "__main__":
         port=SETTINGS.PORT,
         reload=SETTINGS.ENVIRONMENT != ENVIRONMENT_TYPE.PRODUCTION,
         workers=1,
-        logger="info",
+        # logger="info",
     )
