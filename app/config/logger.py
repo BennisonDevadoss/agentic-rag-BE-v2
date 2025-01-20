@@ -1,6 +1,9 @@
+import sys
 import socket
 
 from loguru import logger as logging
+
+# from loguru import Logger
 
 from .settings import SETTINGS
 
@@ -12,7 +15,7 @@ def configure_logging():
     logging.remove()
 
     logging.add(
-        sink="sys.stdout",
+        sink=sys.stdout,
         level=SETTINGS.LOG_LEVEL,
         format=log_format,
     )
@@ -20,7 +23,6 @@ def configure_logging():
     hostname = socket.gethostname()
 
     logger = logging.bind(hostname=hostname)
-    logger.info("this is not working")
 
     return logger
 
