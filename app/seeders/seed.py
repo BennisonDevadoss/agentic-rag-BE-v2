@@ -10,13 +10,14 @@ parent_directory = os.path.dirname(directory_path)
 sys.path.append(directory_path)
 sys.path.append(parent_directory)
 
-from config.database import SessionLocal
-from config.models import Role, User
-from role_data import ROLES
 from sqlalchemy import func
 from sqlalchemy.orm import Session
+
+from role_data import ROLES
 from user_data import USERS
+from config.models import Role, User
 from utils.password_utils import get_password_hash
+from config.database import SessionLocal
 
 
 def seed_roles(roles: list[Role], db: Session) -> None:
