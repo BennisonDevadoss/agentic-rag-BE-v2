@@ -1,4 +1,5 @@
 import sys
+import json
 from typing import Any
 
 from loguru import logger
@@ -27,11 +28,13 @@ def log_activity(user: User, resource: Any, resource_name: str, action: str) -> 
     activity_message = activity_message_format(user, resource_name, action)
     user_log_details = get_user_log_format(user)
     logger.info(
-        {
-            "type": "ActivityLog",
-            "current_user": user_log_details,
-            resource_name: resource,
-        },
+        json.dumps(
+            {
+                "type": "ActivityLog",
+                "current_user": user_log_details,
+                resource_name: resource,
+            }
+        ),
         activity_message,
     )
 
