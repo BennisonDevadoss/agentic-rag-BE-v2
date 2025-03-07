@@ -1,14 +1,14 @@
+from sqlalchemy.orm import relationship, Mapped
 from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
     Text,
     func,
+    Column,
+    String,
+    Integer,
+    Boolean,
+    DateTime,
+    ForeignKey,
 )
-from sqlalchemy.orm import relationship
 
 from .database import Base
 
@@ -67,4 +67,4 @@ class User(Base):
     deleted_at = Column(DateTime, nullable=True)
 
     # Relationships
-    role = relationship("Role", back_populates="users")
+    role: Mapped[Role] = relationship("Role", back_populates="users")
