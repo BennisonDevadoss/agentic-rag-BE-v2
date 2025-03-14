@@ -18,11 +18,17 @@ class Settings(BaseSettings):
     HOST: str = Field(default="localhost")
     BASE_URL: AnyHttpUrl = Field(default="http://localhost:4000")
     LOG_LEVEL: str = Field(default="INFO")
-    ENVIRONMENT: str = Field(default="developement")
+    ENVIRONMENT: str = Field(default="development")
     BACKEND_URL: AnyHttpUrl = Field(default="http://localhost:4000")
+
     DATABASE_URL: PostgresDsn
-    ALLOWED_ORIGIN: str = Field(default="*")
     SHOW_SQL_ALCHEMY_QUERIES: bool = True
+
+    ALLOWED_ORIGIN: str = Field(default="*")
+
+    ALGORITHM: str = "HS256"
+    SECRET_KEY: str = Field("secret_key", min_length=5)
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
 
 SETTINGS = Settings()
