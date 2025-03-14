@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, status
-from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 
 def register_exception_handlers(app: FastAPI) -> None:
