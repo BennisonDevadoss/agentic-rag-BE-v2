@@ -1,5 +1,8 @@
 # https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_agentic_rag/
 
+from typing import Any, AsyncGenerator
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
 
@@ -8,7 +11,15 @@ from config.settings import SETTINGS
 from config.constants import ENVIRONMENT_TYPE
 from routers.v1.router import v1_router
 from config.cors_options import configure_cors
+
+# from vector_db.milvus_db import create_milvus_database
 from exceptions.http_exception_filter import register_exception_handlers
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
+    # create_milvus_database()
+    yield
 
 
 # Create and configure the FastAPI application
@@ -17,6 +28,7 @@ def create_app() -> FastAPI:
         title="Agentic RAG Server",
         description="Backend server for Agentic RAG",
         version="0.0.1",
+        lifespan=lifespan,
         docs_url=(
             None if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION else "/docs"
         ),
@@ -68,5 +80,4 @@ https://github.com/BennisonDevadoss/AgenticRAG
         port=SETTINGS.PORT,
         reload=SETTINGS.ENVIRONMENT != ENVIRONMENT_TYPE.PRODUCTION,
         workers=1,
-        # logger="info",
     )

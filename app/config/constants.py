@@ -8,5 +8,11 @@ class ENVIRONMENT_TYPE(str, Enum):
 
 
 class USER_ROLES(str, Enum):
-    USER = "User"
-    ADMIN = "Admin"
+    USER = "user"
+    ADMIN = "admin"
+
+
+class EMBEDDING_MODEL_PROVIDERS(str, Enum):
+    OPENAI = "openai"
+    GEMINI = "gemini"
+    HUGGINGFACE = "huggingface"
