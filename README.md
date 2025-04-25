@@ -1,1 +1,1 @@
-# BookBrowseAI
+# Agentic RAG

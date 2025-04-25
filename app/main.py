@@ -1,3 +1,5 @@
+# https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_agentic_rag/
+
 import uvicorn
 from fastapi import FastAPI
 
@@ -12,8 +14,8 @@ from exceptions.http_exception_filter import register_exception_handlers
 # Create and configure the FastAPI application
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Book Browse AI Server",
-        description="Backend server for Book Browse AI",
+        title="Agentic RAG Server",
+        description="Backend server for Agentic RAG",
         version="0.0.1",
         docs_url=(
             None if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION else "/docs"
@@ -40,7 +42,7 @@ app = create_app()
 # Define the root endpoint
 @app.get("/")
 async def root() -> dict[str, str]:
-    return {"message": "Hello from Book Browse AI!"}
+    return {"message": "Hello from Agentic RAG System!!!"}
 
 
 # Run the application with uvicorn
@@ -48,15 +50,15 @@ if __name__ == "__main__":
     # https://fsymbols.com/
     print(  # noqa: T201
         """
-██████╗░░█████╗░░█████╗░██╗░░██╗  ██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗░██████╗███████╗  ░█████╗░██╗
-██╔══██╗██╔══██╗██╔══██╗██║░██╔╝  ██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║██╔════╝██╔════╝  ██╔══██╗██║
-██████╦╝██║░░██║██║░░██║█████═╝░  ██████╦╝██████╔╝██║░░██║░╚██╗████╗██╔╝╚█████╗░█████╗░░  ███████║██║
-██╔══██╗██║░░██║██║░░██║██╔═██╗░  ██╔══██╗██╔══██╗██║░░██║░░████╔═████║░░╚═══██╗██╔══╝░░  ██╔══██║██║
-██████╦╝╚█████╔╝╚█████╔╝██║░╚██╗  ██████╦╝██║░░██║╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝███████╗  ██║░░██║██║
-╚═════╝░░╚════╝░░╚════╝░╚═╝░░╚═╝  ╚═════╝░╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚══════╝  ╚═╝░░╚═╝╚═╝
+░█████╗░░██████╗░███████╗███╗░░██╗████████╗██╗░█████╗░  ██████╗░░█████╗░░██████╗░
+██╔══██╗██╔════╝░██╔════╝████╗░██║╚══██╔══╝██║██╔══██╗  ██╔══██╗██╔══██╗██╔════╝░
+███████║██║░░██╗░█████╗░░██╔██╗██║░░░██║░░░██║██║░░╚═╝  ██████╔╝███████║██║░░██╗░
+██╔══██║██║░░╚██╗██╔══╝░░██║╚████║░░░██║░░░██║██║░░██╗  ██╔══██╗██╔══██║██║░░╚██╗
+██║░░██║╚██████╔╝███████╗██║░╚███║░░░██║░░░██║╚█████╔╝  ██║░░██║██║░░██║╚██████╔╝
+╚═╝░░╚═╝░╚═════╝░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░╚═╝░╚════╝░  ╚═╝░░╚═╝╚═╝░░╚═╝░╚═════╝░
 
 building the best AI Application.
-https://github.com/BennisonDevadoss/BookBrowseAI
+https://github.com/BennisonDevadoss/AgenticRAG
 """  # noqa: E501
     )
     logger.info(f"Server listening at http://{SETTINGS.HOST}:{SETTINGS.PORT}")
