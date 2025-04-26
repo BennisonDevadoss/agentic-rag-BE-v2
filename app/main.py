@@ -11,14 +11,14 @@ from config.settings import SETTINGS
 from config.constants import ENVIRONMENT_TYPE
 from routers.v1.router import v1_router
 from config.cors_options import configure_cors
-
-# from vector_db.milvus_db import create_milvus_database
+from vector_db.milvus_db import MilvusService
 from exceptions.http_exception_filter import register_exception_handlers
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
-    # create_milvus_database()
+    MilvusService.create_and_reset_db()
+    MilvusService.init_vector_store()
     yield
 
 
