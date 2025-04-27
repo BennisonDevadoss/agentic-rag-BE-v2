@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+# from contextlib import contextmanager
 from typing import Any, Generator
 
 from sqlalchemy import create_engine
@@ -15,7 +15,7 @@ Base = declarative_base()
 
 
 # Dependency to get the DB session using context manager
-@contextmanager
+# @contextmanager
 def get_db() -> Generator[Session, Any, None]:
     db = SessionLocal()
     try:
