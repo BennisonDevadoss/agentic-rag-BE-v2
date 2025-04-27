@@ -46,7 +46,7 @@ def seed_users(users: list[User], db: Session) -> None:
             existing_record.first_name = user.first_name
             existing_record.last_name = user.last_name
             existing_record.role_id = user.role_id
-            existing_record.is_otp_verified = user.is_otp_verified
+            existing_record.is_email_verified = user.is_email_verified
             existing_record.encrypted_password = user.encrypted_password
             existing_record.updated_at = func.now()
         else:
