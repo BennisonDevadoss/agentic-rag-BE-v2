@@ -39,5 +39,7 @@ class Settings(BaseSettings):
     EMBEDDING_DIMENSION: str = Field("default")
     EMBEDDING_MODEL_PROVIDER: str = Field(512)
 
+    REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
+
 
 SETTINGS = Settings()
