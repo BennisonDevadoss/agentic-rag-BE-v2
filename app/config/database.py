@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from .settings import SETTINGS
 
 # Database setup
-engine = create_engine(str(SETTINGS.DATABASE_URL))
+engine = create_engine(str(SETTINGS.DATABASE_URL), echo=SETTINGS.DEBUG)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
