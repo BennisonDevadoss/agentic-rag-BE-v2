@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ENVIRONMENT_TYPE(str, Enum):
-    TEST = "test"
+    STAGING = "staging"
     PRODUCTION = "production"
     DEVELOPMENT = "development"
 

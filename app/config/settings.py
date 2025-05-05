@@ -3,15 +3,22 @@ import os
 from pydantic import AnyHttpUrl, Field, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# ENV_PATH = os.path.abspath(os.path.join(current_dir, "../../.env"))
+from .constants import ENVIRONMENT_TYPE
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+ENV_PATH = os.path.abspath(
+    os.path.join(
+        current_dir,
+        f"../../.env.{os.getenv('ENVIRONMENT',ENVIRONMENT_TYPE.DEVELOPMENT.value)}",
+    )
+)
 
 
 class Settings(BaseSettings):
     # model_config = SettingsConfigDict(env_file="../.env", env_file_encoding="utf-8")
 
     model_config = SettingsConfigDict(
-        env_file=f"../.env.{os.getenv('ENV', 'development')}",
+        env_file=ENV_PATH,
         env_file_encoding="utf-8",
     )
 
@@ -38,6 +45,8 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
     EMBEDDING_DIMENSION: str = Field("default")
     EMBEDDING_MODEL_PROVIDER: str = Field(512)
+
+    REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 
 
 SETTINGS = Settings()
