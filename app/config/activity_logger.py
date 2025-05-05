@@ -1,19 +1,8 @@
-import sys
 import json
 from typing import Any
 
-from loguru import logger
-
 from config.models import User
-
-
-def configure_activity_logger() -> None:
-    logger.remove()  # Remove default handler
-    logger.add(
-        sys.stdout,
-        level="INFO",
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
-    )
+from config.logger import logger
 
 
 def get_user_log_format(user: User) -> dict:
@@ -37,7 +26,3 @@ def log_activity(user: User, resource: Any, resource_name: str, action: str) -> 
         ),
         activity_message,
     )
-
-
-# Initialize the logger
-configure_activity_logger()
