@@ -5,7 +5,8 @@ from config.settings import SETTINGS
 celery = Celery(
     "worker",
     broker=SETTINGS.REDIS_BASE_URL,
-    backend=SETTINGS.REDIS_BASE_URL,
+    backend=f"db+{SETTINGS.DATABASE_URL}",
+    # backend=SETTINGS.REDIS_BASE_URL,
 )
 
 # If you need to set any other Celery options
@@ -22,7 +23,7 @@ celery.conf.update(
     },
 )
 
-# celery -A app.core.celery_app.celery_app worker --loglevel=info -Q emails,priority_high,default
+# celery -A queues.worker worker --loglevel=info -Q emails,priority_high,default
 
 # # Worker only for emails
 # celery -A worker.worker.celery_app worker --loglevel=info -Q emails
