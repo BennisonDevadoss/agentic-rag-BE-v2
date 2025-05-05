@@ -25,6 +25,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
 # Create and configure the FastAPI application
 def create_app() -> FastAPI:
     app = FastAPI(
+        debug=SETTINGS.DEBUG,
         title="Agentic RAG Server",
         description="Backend server for Agentic RAG",
         version="0.0.1",
@@ -53,8 +54,12 @@ app = create_app()
 
 # Define the root endpoint
 @app.get("/")
-async def root() -> dict[str, str]:
-    return {"message": "Hello from Agentic RAG System!!!"}
+async def root() -> dict[str, str | bool]:
+    return {
+        "env": SETTINGS.ENVIRONMENT,
+        "debug": SETTINGS.DEBUG,
+        "message": "Hello from Agentic RAG System!!!",
+    }
 
 
 # Run the application with uvicorn
@@ -73,7 +78,9 @@ building the best AI Application.
 https://github.com/BennisonDevadoss/AgenticRAG
 """  # noqa: E501
     )
-    logger.info(f"Server listening at http://{SETTINGS.HOST}:{SETTINGS.PORT}")
+    logger.info(
+        f"🚀 Server listening at http://{SETTINGS.HOST}:{SETTINGS.PORT} in {SETTINGS.ENVIRONMENT.upper()} environment 🌍"  # noqa: E501
+    )
     uvicorn.run(
         "main:app",
         host=SETTINGS.HOST,

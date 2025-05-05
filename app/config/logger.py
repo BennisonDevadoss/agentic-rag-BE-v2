@@ -9,15 +9,18 @@ from .settings import SETTINGS
 
 
 def configure_logging():
-    log_format = "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}"
+    log_format = (
+        "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+        "<level>{level}</level> | "
+        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
+        "<level>{message}</level>"
+    )
 
     # Clear default Loguru handlers
     logging.remove()
 
     logging.add(
-        sink=sys.stdout,
-        level=SETTINGS.LOG_LEVEL,
-        format=log_format,
+        sink=sys.stdout, level=SETTINGS.LOG_LEVEL, format=log_format, colorize=True
     )
 
     hostname = socket.gethostname()
