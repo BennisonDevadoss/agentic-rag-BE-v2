@@ -29,6 +29,20 @@ target_metadata = models.Base.metadata
 config.set_main_option("sqlalchemy.url", str(SETTINGS.DATABASE_URL))
 
 
+def include_object(object, name, type_, reflected, compare_to) -> bool:
+    """Exclude specific tables from Alembic autogeneration"""
+    if type_ == "table" and name in {
+        "checkpoints",
+        "checkpoint_blobs",
+        "checkpoint_writes",
+        "checkpoint_migrations",
+        "celery_taskmeta",
+        "celery_tasksetmeta",
+    }:
+        return False
+    return True
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -67,7 +81,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            include_object=include_object,
+            target_metadata=target_metadata,
+        )
 
         with context.begin_transaction():
             context.run_migrations()

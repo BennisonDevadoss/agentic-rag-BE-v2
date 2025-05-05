@@ -31,10 +31,14 @@ def create_app() -> FastAPI:
         version="0.0.1",
         lifespan=lifespan,
         docs_url=(
-            None if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION else "/docs"
+            None
+            if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION.value
+            else "/docs"
         ),
         redoc_url=(
-            None if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION else "/redoc"
+            None
+            if SETTINGS.ENVIRONMENT == ENVIRONMENT_TYPE.PRODUCTION.value
+            else "/redoc"
         ),
     )
 
