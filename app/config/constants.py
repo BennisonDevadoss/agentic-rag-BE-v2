@@ -16,3 +16,10 @@ class EMBEDDING_MODEL_PROVIDERS(str, Enum):
     OPENAI = "openai"
     GEMINI = "gemini"
     HUGGINGFACE = "huggingface"
+
+
+class LLM_MODEL_PROVIDERS(str, Enum):
+    GROQ = "groq"
+    OPENAI = "openai"
+    GOOGLE = "google"
+    ANTHROPIC = "anthropic"

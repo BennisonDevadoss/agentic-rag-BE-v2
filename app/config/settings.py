@@ -3,7 +3,7 @@ import os
 from pydantic import AnyHttpUrl, Field, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from .constants import ENVIRONMENT_TYPE
+from .constants import ENVIRONMENT_TYPE, LLM_MODEL_PROVIDERS
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 ENV_PATH = os.path.abspath(
@@ -37,6 +37,14 @@ class Settings(BaseSettings):
     ALGORITHM: str = Field(default="HS256")
     SECRET_KEY: str = Field("secret_key", min_length=5)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
+
+    MODEL_NAME: str = Field(default="gpt-4o")
+    LLM_PROVIDER: str = Field(default=LLM_MODEL_PROVIDERS.OPENAI.value)
+    LLM_PROVIDER_API_KEY: str = Field(min_length=15)
+
+    LANGFUSE_HOST: str | None = Field(default=None)
+    LANGFUSE_PUBLIC_KEY: str | None = Field(default=None)
+    LANGFUSE_SECRET_KEY: str | None = Field(default=None)
 
     MILVUS_DB: str = Field(default="agentic_rag")
     MILVUS_PORT: int = Field(default=19530)
