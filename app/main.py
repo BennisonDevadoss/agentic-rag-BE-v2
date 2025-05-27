@@ -12,17 +12,18 @@ from config.constants import ENVIRONMENT_TYPE
 from routers.v1.router import v1_router
 from config.cors_options import configure_cors
 from vector_db.milvus_db import MilvusService
+from agents.common.checkpointer import checkpointer
 from exceptions.http_exception_filter import register_exception_handlers
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
+    checkpointer.setup()
     MilvusService.create_and_reset_db()
     MilvusService.init_vector_store()
     yield
 
 
-# Create and configure the FastAPI application
 def create_app() -> FastAPI:
     app = FastAPI(
         debug=SETTINGS.DEBUG,
@@ -42,21 +43,17 @@ def create_app() -> FastAPI:
         ),
     )
 
-    # Apply CORS settings and register exception handlers
     configure_cors(app)
     register_exception_handlers(app)
 
-    # Include routers
     app.include_router(v1_router)
 
     return app
 
 
-# Initialize the app
 app = create_app()
 
 
-# Define the root endpoint
 @app.get("/")
 async def root() -> dict[str, str | bool]:
     return {
