@@ -7,8 +7,6 @@ from config.embedding import embeddings
 
 
 class MilvusService:
-    _vector_store: Milvus | None = None
-
     @classmethod
     def create_and_reset_db(cls) -> None:
         logger.info("Connecting to Milvus...")
@@ -33,24 +31,15 @@ class MilvusService:
             logger.error(f"Milvus error: {e}")
             raise
 
-    @classmethod
-    def init_vector_store(cls) -> None:
-        if cls._vector_store is None:
-            cls._vector_store = Milvus(
-                drop_old=False,
-                index_params={"index_type": "FLAT", "metric_type": "L2"},
-                connection_args={
-                    "uri": f"http://{SETTINGS.MILVUS_HOST}:{SETTINGS.MILVUS_PORT}",
-                    "db_name": SETTINGS.MILVUS_DB,
-                },
-                embedding_function=embeddings,
-            )
-            logger.info("Milvus vector store initialized.")
-
-    @classmethod
-    def get_vector_store(cls) -> Milvus:
-        if cls._vector_store is None:
-            raise RuntimeError(
-                "Milvus vector store not initialized. Call init_vector_store() first."
-            )
-        return cls._vector_store
+    @staticmethod
+    def get_vector_store(collection_name) -> None:
+        return Milvus(
+            drop_old=False,
+            index_params={"index_type": "FLAT", "metric_type": "L2"},
+            connection_args={
+                "uri": f"http://{SETTINGS.MILVUS_HOST}:{SETTINGS.MILVUS_PORT}",
+                "db_name": SETTINGS.MILVUS_DB,
+            },
+            collection_name=collection_name,
+            embedding_function=embeddings,
+        )

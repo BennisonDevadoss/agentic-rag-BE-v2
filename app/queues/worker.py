@@ -2,15 +2,17 @@ from celery import Celery
 
 from config.settings import SETTINGS
 
-celery = Celery(
+celery_app = Celery(
     "worker",
     broker=SETTINGS.REDIS_BASE_URL,
     backend=f"db+{SETTINGS.DATABASE_URL}",
     # backend=SETTINGS.REDIS_BASE_URL,
 )
 
+celery_app.autodiscover_tasks(["queues"])
+
 # If you need to set any other Celery options
-celery.conf.update(
+celery_app.conf.update(
     task_serializer="json",
     accept_content=["json"],
     result_serializer="json",
@@ -18,18 +20,18 @@ celery.conf.update(
     enable_utc=True,
     task_default_queue="default",
     task_routes={
-        "tasks.add_numbers": {"queue": "priority_high"},
-        "tasks.send_email": {"queue": "emails"},
+        "tasks.crawl_urls_task": {"queue": "crawler"},
+        "tasks.upload_file_task": {"queue": "document"},
     },
 )
 
-# celery -A queues.worker worker --loglevel=info -Q emails,priority_high,default
+# PYTHONPATH=. celery -A queues.worker worker --loglevel=info -Q emails,priority_high,default
 
 # # Worker only for emails
-# celery -A worker.worker.celery_app worker --loglevel=info -Q emails
+# PYTHONPATH=. celery -A worker.worker.celery_app worker --loglevel=info -Q emails
 
 # # Worker for priority tasks
-# celery -A worker.worker.celery_app worker --loglevel=info -Q priority_high
+# PYTHONPATH=. celery -A worker.worker.celery_app worker --loglevel=info -Q priority_high
 
 # # Worker for default
-# celery -A worker.worker.celery_app worker --loglevel=info -Q default
+# PYTHONPATH=. celery -A worker.worker.celery_app worker --loglevel=info -Q default
