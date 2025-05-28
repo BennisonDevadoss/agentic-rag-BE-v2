@@ -1,5 +1,6 @@
-from typing import Any
+from typing import Any, Literal
 
+from langchain_core.messages.base import BaseMessage
 from pydantic import BaseModel, Field
 from langgraph.prebuilt import ToolNode
 from langchain_core.messages import ToolMessage
@@ -43,8 +44,17 @@ class Assistant:
 # GENERATE QUERY OR RESPOND ASSISTANT
 ###################################
 
-generate_query_or_respond_runnable = llm.bind_tools([])
-generate_query_or_respond_node = Assistant(generate_query_or_respond_runnable)
+
+def generate_query_or_respond(state: State) -> dict[str, list[BaseMessage]]:
+    """Call the model to generate a response based on the current state. Given
+    the question, it will decide to retrieve using the retriever tool, or simply respond to the user.
+    """
+    response = llm.bind_tools([]).invoke(state["messages"])
+    return {"messages": [response]}
+
+
+# generate_query_or_respond_runnable = llm.bind_tools([])
+# generate_query_or_respond_node = Assistant(generate_query_or_respond_runnable)
 
 
 ###################################
@@ -60,24 +70,64 @@ class GradeDocuments(BaseModel):
     )
 
 
-document_greading_assistant_runnable = (
-    document_greading_assistant_prompt | llm.with_structured_output(GradeDocuments)
-)
-document_greading_assistant_node = Assistant(document_greading_assistant_runnable)
+def grade_documents(
+    state: State,
+) -> Literal["generate_answer", "rewrite_question"]:
+    """Determine whether the retrieved documents are relevant to the question."""
+    question = state["messages"][0].content
+    context = state["messages"][-1].content
 
+    prompt = document_greading_assistant_prompt.format(
+        question=question, context=context
+    )
+    response = llm.with_structured_output(GradeDocuments).invoke(
+        [{"role": "user", "content": prompt}]
+    )
+    score = response.binary_score
+
+    if score == "yes":
+        return "generate_answer"
+    else:
+        return "rewrite_question"
+
+
+# document_greading_assistant_runnable = (
+#     document_greading_assistant_prompt | llm.with_structured_output(GradeDocuments)
+# )
+# document_greading_assistant_node = Assistant(document_greading_assistant_runnable)
+
+
+###################################
+# REWRITE QUESTION ASSISTANT
+###################################
+def rewrite_question(state: State) -> dict[str, list[dict[str, Any]]]:
+    """Rewrite the original user question."""
+    messages = state["messages"]
+    question = messages[0].content
+    prompt = rewrite_user_prompt_assistant_prompt.format(question=question)
+    response = llm.invoke([{"role": "user", "content": prompt}])
+    return {"messages": [{"role": "user", "content": response.content}]}
+
+
+# rewrite_question_assistant_runnable = rewrite_user_prompt_assistant_prompt | llm
+# rewrite_question_assistant_node = Assistant(rewrite_question_assistant_runnable)
 
 ###################################
 # GENERATE ANSWER ASSISTANT
 ###################################
-rewrite_question_assistant_runnable = rewrite_user_prompt_assistant_prompt | llm
-rewrite_question_assistant_node = Assistant(rewrite_question_assistant_runnable)
 
-###################################
-# GENERATE ANSWER ASSISTANT
-###################################
 
-generate_answer_assistant_runnable = generate_answer_assistant_prompt | llm
-generate_answer_assistant_node = Assistant(generate_answer_assistant_runnable)
+def generate_answer(state: State) -> dict[str, list]:
+    """Generate an answer."""
+    question = state["messages"][0].content
+    context = state["messages"][-1].content
+    prompt = generate_answer_assistant_prompt.format(question=question, context=context)
+    response = llm.invoke([{"role": "user", "content": prompt}])
+    return {"messages": [response]}
+
+
+# generate_answer_assistant_runnable = generate_answer_assistant_prompt | llm
+# generate_answer_assistant_node = Assistant(generate_answer_assistant_runnable)
 
 ###################################
 # TOOL NODE
