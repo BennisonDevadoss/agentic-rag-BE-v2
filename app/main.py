@@ -20,7 +20,6 @@ from exceptions.http_exception_filter import register_exception_handlers
 async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
     checkpointer.setup()
     MilvusService.create_and_reset_db()
-    MilvusService.init_vector_store()
     yield
 
 
