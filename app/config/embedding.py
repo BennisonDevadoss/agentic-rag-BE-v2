@@ -3,7 +3,6 @@ from config.constants import EMBEDDING_MODEL_PROVIDERS
 
 
 match SETTINGS.EMBEDDING_MODEL_PROVIDER.lower():
-
     case EMBEDDING_MODEL_PROVIDERS.OPENAI:
         # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_openai import OpenAIEmbeddings
@@ -16,7 +15,7 @@ match SETTINGS.EMBEDDING_MODEL_PROVIDER.lower():
 
         embeddings = HuggingFaceEmbeddings(model_name=SETTINGS.EMBEDDING_MODEL)
 
-    case EMBEDDING_MODEL_PROVIDERS.HUGGINGFACE:
+    case EMBEDDING_MODEL_PROVIDERS.GEMINI:
         # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 

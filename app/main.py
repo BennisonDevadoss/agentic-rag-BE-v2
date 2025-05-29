@@ -62,7 +62,6 @@ async def root() -> dict[str, str | bool]:
     }
 
 
-# Run the application with uvicorn
 if __name__ == "__main__":
     # https://fsymbols.com/
     print(  # noqa: T201

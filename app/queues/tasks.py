@@ -5,6 +5,7 @@ from celery import Task
 from .worker import celery_app
 from config.logger import logger
 from utils.crawler import crawl_urls_task_async
+from vector_db.milvus_db import MilvusService
 
 
 class BaseTask(Task):
@@ -34,4 +35,6 @@ def crawl_urls_task(self, collection_name: str, urls: list[str]) -> None:
 
 @celery_app.task(bind=True, base=BaseTask, name="tasks.upload_file_task")
 def upload_file_task(self, collection_name: str, file_path: str) -> None:
-    pass
+    vector_store = MilvusService(collection_name)
+    documents = vector_store.load_and_split(file_path)
+    vector_store.ingest_documents(documents)
