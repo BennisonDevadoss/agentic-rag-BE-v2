@@ -34,7 +34,8 @@ def crawl_urls_task(self, collection_name: str, urls: list[str]) -> None:
 
 
 @celery_app.task(bind=True, base=BaseTask, name="tasks.upload_file_task")
-def upload_file_task(self, collection_name: str, file_path: str) -> None:
+def upload_file_task(self, collection_name: str, file_path: str) -> str:
     vector_store = MilvusService(collection_name)
     documents = vector_store.load_and_split(file_path)
     vector_store.ingest_documents(documents)
+    return "File is been ingested to Vector DB successfully!!!"
