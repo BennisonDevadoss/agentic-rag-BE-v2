@@ -37,7 +37,7 @@ class MilvusService:
             if SETTINGS.MILVUS_DB not in existing_dbs:
                 db.create_database(SETTINGS.MILVUS_DB)
                 logger.info(f"Created database '{SETTINGS.MILVUS_DB}'")
-                return 1
+                return
 
                 # db.using_database(SETTINGS.MILVUS_DB)
                 # for collection_name in utility.list_collections():
