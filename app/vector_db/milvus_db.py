@@ -1,7 +1,7 @@
 import os
 from uuid import uuid4
 
-from pymilvus import connections, db, utility, Collection, MilvusException
+from pymilvus import connections, db, MilvusException
 from langchain_milvus import Milvus
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -34,16 +34,20 @@ class MilvusService:
 
         try:
             existing_dbs = db.list_database()
-            if SETTINGS.MILVUS_DB in existing_dbs:
-                db.using_database(SETTINGS.MILVUS_DB)
-                for collection_name in utility.list_collections():
-                    Collection(name=collection_name).drop()
-                    logger.info(f"Dropped collection '{collection_name}'")
-                db.drop_database(SETTINGS.MILVUS_DB)
-                logger.info(f"Deleted database '{SETTINGS.MILVUS_DB}'")
+            if SETTINGS.MILVUS_DB not in existing_dbs:
+                db.create_database(SETTINGS.MILVUS_DB)
+                logger.info(f"Created database '{SETTINGS.MILVUS_DB}'")
+                return 1
 
-            db.create_database(SETTINGS.MILVUS_DB)
-            logger.info(f"Created database '{SETTINGS.MILVUS_DB}'")
+                # db.using_database(SETTINGS.MILVUS_DB)
+                # for collection_name in utility.list_collections():
+                #     Collection(name=collection_name).drop()
+                #     logger.info(f"Dropped collection '{collection_name}'")
+                # db.drop_database(SETTINGS.MILVUS_DB)
+                # logger.info(f"Deleted database '{SETTINGS.MILVUS_DB}'")
+
+            # db.create_database(SETTINGS.MILVUS_DB)
+            logger.info(f"Database '{SETTINGS.MILVUS_DB}' already exist.")
         except MilvusException as e:
             logger.error(f"Milvus error: {e}")
             raise
