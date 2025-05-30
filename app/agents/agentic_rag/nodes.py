@@ -91,7 +91,7 @@ def grade_documents(
     prompt = document_greading_assistant_prompt.format(
         question=question, context=context
     )
-    response = llm.with_structured_output(GradeDocuments).invoke(
+    response: GradeDocuments = llm.with_structured_output(GradeDocuments).invoke(
         [{"role": "user", "content": prompt}]
     )
     score = response.binary_score
