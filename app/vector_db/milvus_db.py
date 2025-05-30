@@ -3,8 +3,8 @@ from uuid import uuid4
 
 from pymilvus import connections, db, MilvusException
 from langchain_milvus import Milvus
-from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 from langchain_community.document_loaders import (
     CSVLoader,
     TextLoader,

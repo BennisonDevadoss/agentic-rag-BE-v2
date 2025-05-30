@@ -8,12 +8,13 @@ from langchain_core.runnables import Runnable, RunnableConfig, RunnableLambda
 
 
 from .state import State, default_state
+from .tools import retriever_tool
+from config.llms import llm
 from .prompts import (
     generate_answer_assistant_prompt,
     document_greading_assistant_prompt,
     rewrite_user_prompt_assistant_prompt,
 )
-from config.llms import llm
 
 
 class Assistant:
@@ -45,11 +46,21 @@ class Assistant:
 ###################################
 
 
-def generate_query_or_respond(state: State) -> dict[str, list[BaseMessage]]:
+def generate_query_or_respond(
+    state: State, config: RunnableConfig
+) -> dict[str, list[BaseMessage]]:
     """Call the model to generate a response based on the current state. Given
     the question, it will decide to retrieve using the retriever tool, or simply respond to the user.
     """
-    response = llm.bind_tools([]).invoke(state["messages"])
+
+    # collection_name = (
+    #     config["configurable"]["collection_name"]
+    #     if "collection_name" in config["configurable"]
+    #     else None
+    # )
+    # retriver_tools = get_all_retriver_tools(collection_name)
+
+    response = llm.bind_tools([retriever_tool]).invoke(state["messages"])
     return {"messages": [response]}
 
 
@@ -103,7 +114,9 @@ def grade_documents(
 def rewrite_question(state: State) -> dict[str, list[dict[str, Any]]]:
     """Rewrite the original user question."""
     messages = state["messages"]
-    question = messages[0].content
+    question = messages[
+        -2
+    ].content  # WARNING: this could cause issue in retriving current user message
     prompt = rewrite_user_prompt_assistant_prompt.format(question=question)
     response = llm.invoke([{"role": "user", "content": prompt}])
     return {"messages": [{"role": "user", "content": response.content}]}
@@ -154,4 +167,4 @@ def create_tool_node_with_fallback(tools: list) -> dict:
     )
 
 
-retriever_tool_node = create_tool_node_with_fallback([])
+retriever_tool_node = create_tool_node_with_fallback([retriever_tool])

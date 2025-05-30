@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     MILVUS_PORT: int = Field(default=19530)
     MILVUS_HOST: str = Field(default="localhost")
 
-    EMBEDDING_MODEL: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
+    EMBEDDING_MODEL: str = Field(default="all-MiniLM-L6-v2")
     EMBEDDING_DIMENSION: str = Field("default")
     EMBEDDING_MODEL_PROVIDER: str = Field(512)
 
