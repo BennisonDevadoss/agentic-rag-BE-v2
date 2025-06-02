@@ -56,5 +56,7 @@ class Settings(BaseSettings):
 
     REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 
+    RECAPTCHA_SECRET_KEY: str | None = Field(default=None, min_length=5)
+
 
 SETTINGS = Settings()

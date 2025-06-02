@@ -1,6 +1,7 @@
 # https://docs.crawl4ai.com/advanced/multi-url-crawling/
 
 import hashlib
+from tempfile import NamedTemporaryFile
 
 from crawl4ai import (
     AsyncWebCrawler,
@@ -53,7 +54,14 @@ async def crawl_urls_task_async(urls: list[str]) -> None:
     total_characters = len(content)
     if total_characters == 0:
         raise ValueError("Failed to scrape any unique content from the URLs")
-    return content
+
+    with NamedTemporaryFile(
+        delete=False, suffix=".md", mode="w", encoding="utf-8"
+    ) as tmp:
+        tmp.write(content)
+        file_path = tmp.name
+
+    return file_path
 
 
 if __name__ == "__main__":

@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class GENERAL_CONFIGS(str, Enum):
+    SESSION_COOKIE_NAME = "session_cookie"
+
+
 class ENVIRONMENT_TYPE(str, Enum):
     STAGING = "staging"
     PRODUCTION = "production"
