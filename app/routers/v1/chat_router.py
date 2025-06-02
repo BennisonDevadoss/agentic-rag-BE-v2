@@ -25,7 +25,7 @@ async def chat_completion(request: ChatRequestParams) -> ChatResponse:
 
 
 @chat_router.post(
-    "/porfolio/web",
+    "/secure/web",
     dependencies=[Depends(verify_captcha), Depends(verify_session_fingerprint)],
     response_model=ChatResponse,
 )
