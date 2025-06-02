@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class ChatRequestParams(BaseModel):
     messages: list[dict]  # Example: [{"role": "user", "content": "Hello"}]
     thread_id: str
+    captcha_token: str | None = None
     collection_name: str
 
 
