@@ -1,0 +1,11 @@
+.env
+.env.staging
+.env.production
+.env.development
+
+.vscode/
+volumes/
+__pycache__/
+.mypy_cache/
+
+assets/
