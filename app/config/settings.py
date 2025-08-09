@@ -9,7 +9,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 ENV_PATH = os.path.abspath(
     os.path.join(
         current_dir,
-        f"../../.env.{os.getenv('ENVIRONMENT',ENVIRONMENT_TYPE.DEVELOPMENT.value)}",
+        f"../../.env.{os.getenv('ENVIRONMENT', ENVIRONMENT_TYPE.DEVELOPMENT.value)}",
     )
 )
 
