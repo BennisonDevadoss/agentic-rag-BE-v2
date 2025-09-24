@@ -27,3 +27,8 @@ class LLM_MODEL_PROVIDERS(str, Enum):
     OPENAI = "openai"
     GOOGLE = "google"
     ANTHROPIC = "anthropic"
+
+
+class VECTOR_DB_PROVIDERS(str, Enum):
+    MILVUS = "milvus"
+    PG_VECTOR = "pg_vector"

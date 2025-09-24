@@ -19,7 +19,7 @@ from exceptions.http_exception_filter import register_exception_handlers
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
     checkpointer.setup()
-    MilvusService.create_and_reset_db()
+    # MilvusService.create_and_reset_db()
     yield
 
 

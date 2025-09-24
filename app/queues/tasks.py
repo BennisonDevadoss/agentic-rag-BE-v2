@@ -5,7 +5,7 @@ from celery import Task
 from .worker import celery_app
 from config.logger import logger
 from utils.crawler import crawl_urls_task_async
-from vector_db.milvus_db import MilvusService
+from config.vector_db import vector_db
 
 
 class BaseTask(Task):
@@ -31,15 +31,13 @@ class BaseTask(Task):
 @celery_app.task(bind=True, base=BaseTask, name="tasks.crawl_urls_task")
 def crawl_urls_task(self, collection_name: str, urls: list[str]) -> None:
     file_path = asyncio.run(crawl_urls_task_async(urls))  # 👈 wrap async logic
-    vector_store = MilvusService(collection_name)
-    documents = vector_store.load_and_split(file_path)
-    vector_store.ingest_documents(documents)
+    documents = vector_db.load_and_split(file_path)
+    vector_db.ingest_documents(documents)
     return "Website is been ingested to Vector DB successfully!!!"
 
 
 @celery_app.task(bind=True, base=BaseTask, name="tasks.upload_file_task")
 def upload_file_task(self, collection_name: str, file_path: str) -> str:
-    vector_store = MilvusService(collection_name)
-    documents = vector_store.load_and_split(file_path)
-    vector_store.ingest_documents(documents)
+    documents = vector_db.load_and_split(file_path)
+    vector_db.ingest_documents(documents)
     return "File is been ingested to Vector DB successfully!!!"
