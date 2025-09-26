@@ -35,12 +35,12 @@ class Settings(BaseSettings):
     ALLOWED_ORIGIN: str = Field(default="*")
 
     ALGORITHM: str = Field(default="HS256")
-    SECRET_KEY: str = Field("secret_key", min_length=5)
+    JWT_SECRET_KEY: str = Field("secret_key", min_length=5)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
 
-    MODEL_NAME: str = Field(default="gpt-4o")
-    LLM_PROVIDER: str = Field(default=LLM_MODEL_PROVIDERS.OPENAI.value)
-    LLM_PROVIDER_API_KEY: str = Field(min_length=15)
+    LLM_MODEL: str = Field(default="gpt-4o")
+    LLM_PROVIDER: str = Field(default=LLM_MODEL_PROVIDERS.GOOGLE.value)
+    LLM_PROVIDER_API_KEY: str | None = Field(min_length=15, default=None)
 
     LANGFUSE_HOST: str | None = Field(default=None)
     LANGFUSE_PUBLIC_KEY: str | None = Field(default=None)
@@ -57,9 +57,8 @@ class Settings(BaseSettings):
 
     EMBEDDING_MODEL: str = Field(default="all-MiniLM-L6-v2")
     EMBEDDING_DIMENSION: int = Field(default=512)
-    EMBEDDING_MODEL_PROVIDER: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2"
-    )
+    EMBEDDING_PROVIDER: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
+    EMBEDDING_PROVIDER_API_KEY: str | None = Field(min_length=15, default=None)
 
     REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 

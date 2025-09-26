@@ -11,7 +11,7 @@ from config.settings import SETTINGS
 from config.constants import ENVIRONMENT_TYPE
 from routers.v1.router import v1_router
 from config.cors_options import configure_cors
-from vector_db.milvus_db import MilvusService
+# from vector_db.milvus_db import MilvusService
 from agents.common.checkpointer import checkpointer
 from exceptions.http_exception_filter import register_exception_handlers
 
@@ -26,8 +26,8 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[Any, Any]:
 def create_app() -> FastAPI:
     app = FastAPI(
         debug=SETTINGS.DEBUG,
-        title="Agentic RAG Server",
-        description="Backend server for Agentic RAG",
+        title="Meetly Server",
+        description="Backend server for Meetly Agent",
         version="0.0.1",
         lifespan=lifespan,
         docs_url=(
@@ -58,7 +58,7 @@ async def root() -> dict[str, str | bool]:
     return {
         "env": SETTINGS.ENVIRONMENT,
         "debug": SETTINGS.DEBUG,
-        "message": "Hello from Agentic RAG System!!!",
+        "message": "Hello from Meetly Agentic System!!!",
     }
 
 

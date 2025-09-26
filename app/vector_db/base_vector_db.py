@@ -1,13 +1,14 @@
 import os
 from abc import ABC, abstractmethod
 
-from langchain_core.documents import Document
 from langchain_milvus import Milvus
-from langchain_postgres import PGVector
+from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
+from langchain_postgres import PGVector
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 from langchain_community.document_loaders import (
     CSVLoader,
     TextLoader,
@@ -40,7 +41,7 @@ class BaseVectorService(ABC):
         self.vector_store = self.get_vector_store()
 
     @abstractmethod
-    def get_vector_store(self) -> Milvus | PGVector:
+    def get_vector_store(self) -> Milvus | PGVector | Chroma:
         pass
 
     def get_loader(

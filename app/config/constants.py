@@ -18,7 +18,7 @@ class USER_ROLES(str, Enum):
 
 class EMBEDDING_MODEL_PROVIDERS(str, Enum):
     OPENAI = "openai"
-    GEMINI = "gemini"
+    GOOGLE = "google"
     HUGGINGFACE = "huggingface"
 
 
@@ -31,4 +31,5 @@ class LLM_MODEL_PROVIDERS(str, Enum):
 
 class VECTOR_DB_PROVIDERS(str, Enum):
     MILVUS = "milvus"
+    CHROMADB = "chromadb"
     PG_VECTOR = "pg_vector"

@@ -7,9 +7,10 @@ match SETTINGS.LLM_PROVIDER.lower():
     case LLM_MODEL_PROVIDERS.GOOGLE:
         from langchain_google_genai import ChatGoogleGenerativeAI
 
+        # TODO: need to configure each parameter to be dynamic.
         llm = ChatGoogleGenerativeAI(
-            model=SETTINGS.MODEL_NAME,
-            api_key=SETTINGS.LLM_PROVIDER_API_KEY,
+            model=SETTINGS.LLM_MODEL,
+            google_api_key=SETTINGS.LLM_PROVIDER_API_KEY,
             timeout=None,
             temperature=0,
             max_tokens=None,
@@ -20,7 +21,7 @@ match SETTINGS.LLM_PROVIDER.lower():
         from langchain_groq import ChatGroq
 
         llm = ChatGroq(
-            model=SETTINGS.MODEL_NAME,
+            model=SETTINGS.LLM_MODEL,
             api_key=SETTINGS.LLM_PROVIDER_API_KEY,
             temperature=0,
             max_tokens=None,
@@ -31,7 +32,7 @@ match SETTINGS.LLM_PROVIDER.lower():
         from langchain_anthropic import ChatAnthropic
 
         llm = ChatAnthropic(
-            model=SETTINGS.MODEL_NAME,
+            model=SETTINGS.LLM_MODEL,
             api_key=SETTINGS.LLM_PROVIDER_API_KEY,
             temperature=0,
             max_tokens=None,
@@ -42,7 +43,7 @@ match SETTINGS.LLM_PROVIDER.lower():
         from langchain_openai import ChatOpenAI
 
         llm = ChatOpenAI(
-            model=SETTINGS.MODEL_NAME,
+            model=SETTINGS.LLM_MODEL,
             api_key=SETTINGS.LLM_PROVIDER_API_KEY,
             temperature=0,
             max_tokens=None,
