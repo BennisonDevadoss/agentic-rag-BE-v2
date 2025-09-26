@@ -7,24 +7,24 @@ match SETTINGS.EMBEDDING_MODEL_PROVIDER.lower():
         # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_openai import OpenAIEmbeddings
 
-        embeddings = OpenAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
+        embedding = OpenAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
 
     case EMBEDDING_MODEL_PROVIDERS.HUGGINGFACE:
         # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_huggingface import HuggingFaceEmbeddings
 
-        embeddings = HuggingFaceEmbeddings(model_name=SETTINGS.EMBEDDING_MODEL)
+        embedding = HuggingFaceEmbeddings(model_name=SETTINGS.EMBEDDING_MODEL)
 
     case EMBEDDING_MODEL_PROVIDERS.GEMINI:
         # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-        embeddings = GoogleGenerativeAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
+        embedding = GoogleGenerativeAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
 
     case _:
         from langchain_huggingface import HuggingFaceEmbeddings
 
         model_kwargs = {"device": "cpu"}
-        embeddings = HuggingFaceEmbeddings(
+        embedding = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2", model_kwargs=model_kwargs
         )
