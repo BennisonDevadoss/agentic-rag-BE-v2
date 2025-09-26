@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "agentic-rag-be-v2"
+name = "schedule-pro"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
