@@ -2,24 +2,26 @@ from config.settings import SETTINGS
 from config.constants import EMBEDDING_MODEL_PROVIDERS
 
 
-match SETTINGS.EMBEDDING_MODEL_PROVIDER.lower():
+match SETTINGS.EMBEDDING_PROVIDER.lower():
     case EMBEDDING_MODEL_PROVIDERS.OPENAI:
-        # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_openai import OpenAIEmbeddings
 
-        embedding = OpenAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
+        embedding = OpenAIEmbeddings(
+            model=SETTINGS.EMBEDDING_MODEL, api_key=SETTINGS.EMBEDDING_PROVIDER_API_KEY
+        )
 
     case EMBEDDING_MODEL_PROVIDERS.HUGGINGFACE:
-        # WARNING: NEED TO HANDLE API KEY ALSO
         from langchain_huggingface import HuggingFaceEmbeddings
 
         embedding = HuggingFaceEmbeddings(model_name=SETTINGS.EMBEDDING_MODEL)
 
-    case EMBEDDING_MODEL_PROVIDERS.GEMINI:
-        # WARNING: NEED TO HANDLE API KEY ALSO
+    case EMBEDDING_MODEL_PROVIDERS.GOOGLE:
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-        embedding = GoogleGenerativeAIEmbeddings(model=SETTINGS.EMBEDDING_MODEL)
+        embedding = GoogleGenerativeAIEmbeddings(
+            model=SETTINGS.EMBEDDING_MODEL,
+            google_api_key=SETTINGS.EMBEDDING_PROVIDER_API_KEY,
+        )
 
     case _:
         from langchain_huggingface import HuggingFaceEmbeddings

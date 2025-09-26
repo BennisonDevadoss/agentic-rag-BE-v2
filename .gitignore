@@ -9,3 +9,5 @@ __pycache__/
 .mypy_cache/
 
 assets/
+
+chroma_db/
