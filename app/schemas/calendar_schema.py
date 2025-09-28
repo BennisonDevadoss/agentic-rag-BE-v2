@@ -1,14 +1,19 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from datetime import datetime
+
+from pydantic import BaseModel, HttpUrl, Field
 
 
 class EventRequest(BaseModel):
     summary: str
-    start: str  # ISO format: "2025-09-29T10:00:00"
-    end: str  # ISO format: "2025-09-29T11:00:00"
-    attendees: Optional[List[str]] = None
+    start: datetime
+    end: datetime
+    timezone: str | None = Field(default="Asia/Kolkata")
+    attendees: list[str] | None = None
+    description: str | None = None
+    location: str | None = None
 
 
 class EventResponse(BaseModel):
-    event_link: str
     event_id: str
+    meet_link: HttpUrl | None = None
+    event_link: HttpUrl

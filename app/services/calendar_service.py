@@ -1,5 +1,7 @@
 import os
-import datetime
+import uuid
+from typing import Any
+from datetime import datetime
 
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
@@ -36,7 +38,7 @@ def authenticate_user() -> str:
         return "Authentication successful"
 
 
-def get_calendar_service():
+def get_calendar_service() -> Any:
     """
     Loads saved token or refreshes it, returns Google Calendar service instance.
     """
@@ -54,33 +56,67 @@ def get_calendar_service():
     return service
 
 
-def create_event(summary: str, start: str, end: str, attendees: list = None) -> dict:
+def create_event(
+    summary: str,
+    start: datetime,
+    end: datetime,
+    timezone: str | None = "Asia/Kolkata",
+    attendees: list[str] | None = None,
+    description: str | None = None,
+    location: str | None = None,
+    reminders: list[dict[str, Any]] | None = None,
+) -> dict:
     """
-    Creates an event on the authenticated user's Google Calendar.
+    Creates an event on the authenticated user's Google Calendar
+    with Google Meet link and optional details.
     """
     service = get_calendar_service()
 
-    start_time = datetime.datetime.fromisoformat(start)
-    end_time = datetime.datetime.fromisoformat(end)
+    # start_time = datetime.fromisoformat(start)
+    # end_time = datetime.fromisoformat(end)
 
     event = {
         "summary": summary,
-        "start": {"dateTime": start_time.isoformat(), "timeZone": "Asia/Kolkata"},
-        "end": {"dateTime": end_time.isoformat(), "timeZone": "Asia/Kolkata"},
+        "location": location or "",
+        "description": description or "",
+        "start": {"dateTime": start.isoformat(), "timeZone": timezone},
+        "end": {"dateTime": end.isoformat(), "timeZone": timezone},
+        "conferenceData": {  # Google Meet setup
+            "createRequest": {
+                "requestId": str(uuid.uuid4()),
+                "conferenceSolutionKey": {"type": "hangoutsMeet"},
+            }
+        },
     }
 
     if attendees:
         event["attendees"] = [{"email": email} for email in attendees]
 
+    if reminders:
+        event["reminders"] = {
+            "useDefault": False,
+            "overrides": reminders,  # e.g., [{"method": "email", "minutes": 30}]
+        }
+
     created_event = (
         service.events()
-        .insert(calendarId="primary", body=event, sendUpdates="all")
+        .insert(
+            calendarId="primary",
+            body=event,
+            sendUpdates="all",
+            conferenceDataVersion=1,  # Required for Meet link
+        )
         .execute()
     )
+
     return {
         "event_link": created_event.get("htmlLink"),
+        "meet_link": created_event.get("conferenceData", {})
+        .get("entryPoints", [{}])[0]
+        .get("uri"),
         "event_id": created_event.get("id"),
     }
 
 
 # uv add google-api-python-client google-auth-httplib2 google-auth-oauthlib
+# https://developers.google.com/workspace/calendar/api/v3/reference/events?authuser=1#resource-representations

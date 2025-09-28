@@ -31,9 +31,16 @@ async def create_event(request: EventRequest):
             summary=request.summary,
             start=request.start,
             end=request.end,
+            timezone=request.timezone,
             attendees=request.attendees,
+            location=request.location,
+            description=request.description,
         )
-        return EventResponse(event_link=event["event_link"], event_id=event["event_id"])
+        return EventResponse(
+            event_id=event["event_id"],
+            meet_link=event["meet_link"],
+            event_link=event["event_link"],
+        )
     except Exception as e:
         logger.exception(e)
         raise e
