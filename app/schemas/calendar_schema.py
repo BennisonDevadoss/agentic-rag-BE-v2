@@ -6,7 +6,7 @@ from pydantic import BaseModel, HttpUrl, Field
 class EventRequest(BaseModel):
     summary: str
     start: datetime
-    end: datetime
+    end: datetime | None  # NOTE: end is not used.
     timezone: str | None = Field(default="Asia/Kolkata")
     attendees: list[str] | None = None
     description: str | None = None

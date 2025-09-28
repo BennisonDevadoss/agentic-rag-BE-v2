@@ -1,13 +1,20 @@
 import os
 import uuid
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+from config.settings import SETTINGS
+from exceptions.custom_errors import (
+    ConflictException,
+    BadRequestException,
+    UnauthorizedException,
+)
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 TOKEN_FILE = "./creds/token.json"
@@ -50,16 +57,80 @@ def get_calendar_service() -> Any:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            raise Exception("User not authenticated. Call /v1/calendar/auth first.")
+            raise UnauthorizedException(
+                "User not authenticated. Call /v1/calendar/auth first."
+            )
 
     service = build("calendar", "v3", credentials=creds)
     return service
 
 
+def is_time_slot_free_for_me(
+    service: Any,
+    start: datetime,
+    end: datetime,
+    organizer_email: str,  # oragnizer_email should be mine
+) -> bool:
+    """
+    Checks if the primary calendar is free for events created by the authenticated user.
+    Returns True if free, False if a conflicting event exists.
+    """
+    try:
+        events_result = (
+            service.events()
+            .list(
+                calendarId="primary",
+                timeMin=start.isoformat(),
+                timeMax=end.isoformat(),
+                singleEvents=True,
+                orderBy="startTime",
+            )
+            .execute()
+        )
+
+        events = events_result.get("items", [])
+
+        # Filter only events created by this user
+        my_events = [
+            e for e in events if e.get("creator", {}).get("email") == organizer_email
+        ]
+
+        return len(my_events) == 0  # True if no events created by me in this range
+
+    except HttpError as e:
+        raise e
+
+
+def validate_event_slot(service: Any, start: datetime, end: datetime) -> None:
+    """Validates that the event start time is within working hours and computes end time."""
+    # Define working hours
+    work_start = start.replace(
+        hour=SETTINGS.CALENDAR_WORKING_HOURS_START, minute=0, second=0, microsecond=0
+    )
+    work_end = start.replace(
+        hour=SETTINGS.CALENDAR_WORKING_HOURS_END, minute=0, second=0, microsecond=0
+    )
+
+    # Check working hours
+    if not (work_start <= start < work_end) or not (work_start < end <= work_end):
+        raise BadRequestException(
+            f"Event must be within working hours: "
+            f"{SETTINGS.CALENDAR_WORKING_HOURS_START}:00 - "
+            f"{SETTINGS.CALENDAR_WORKING_HOURS_END}:00"
+        )
+
+    # Check for conflicts in the organizer's calendar
+    if not is_time_slot_free_for_me(
+        service, start, end, SETTINGS.CALENDAR_ORGANIZER_EMAIL
+    ):
+        raise ConflictException(
+            "The requested time slot overlaps with an existing event"
+        )
+
+
 def create_event(
     summary: str,
     start: datetime,
-    end: datetime,
     timezone: str | None = "Asia/Kolkata",
     attendees: list[str] | None = None,
     description: str | None = None,
@@ -67,13 +138,13 @@ def create_event(
     reminders: list[dict[str, Any]] | None = None,
 ) -> dict:
     """
-    Creates an event on the authenticated user's Google Calendar
-    with Google Meet link and optional details.
+    Creates an event on Google Calendar with Google Meet link and optional details.
+    End time is automatically calculated using slot duration and validated.
     """
     service = get_calendar_service()
 
-    # start_time = datetime.fromisoformat(start)
-    # end_time = datetime.fromisoformat(end)
+    end = start + timedelta(minutes=SETTINGS.CALENDAR_SLOT_DURATION_MINUTES)
+    validate_event_slot(service, start, end)
 
     event = {
         "summary": summary,
