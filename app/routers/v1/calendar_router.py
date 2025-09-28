@@ -30,7 +30,6 @@ async def create_event(request: EventRequest):
         event = calendar_service.create_event(
             summary=request.summary,
             start=request.start,
-            end=request.end,
             timezone=request.timezone,
             attendees=request.attendees,
             location=request.location,

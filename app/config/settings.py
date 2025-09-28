@@ -1,6 +1,6 @@
 import os
 
-from pydantic import AnyHttpUrl, Field, PostgresDsn
+from pydantic import AnyHttpUrl, Field, PostgresDsn, EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import ENVIRONMENT_TYPE, LLM_MODEL_PROVIDERS, VECTOR_DB_PROVIDERS
@@ -63,6 +63,11 @@ class Settings(BaseSettings):
     REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 
     RECAPTCHA_SECRET_KEY: str | None = Field(default=None, min_length=5)
+
+    CALENDAR_ORGANIZER_EMAIL: EmailStr
+    CALENDAR_WORKING_HOURS_END: int | None = Field(default=17)
+    CALENDAR_WORKING_HOURS_START: int | None = Field(default=9)
+    CALENDAR_SLOT_DURATION_MINUTES: int | None = Field(default=30)
 
 
 SETTINGS = Settings()  # type: ignore
