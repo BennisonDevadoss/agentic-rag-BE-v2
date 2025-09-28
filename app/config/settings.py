@@ -65,9 +65,9 @@ class Settings(BaseSettings):
     RECAPTCHA_SECRET_KEY: str | None = Field(default=None, min_length=5)
 
     CALENDAR_ORGANIZER_EMAIL: EmailStr
-    CALENDAR_WORKING_HOURS_END: int | None = Field(default=17)
-    CALENDAR_WORKING_HOURS_START: int | None = Field(default=9)
-    CALENDAR_SLOT_DURATION_MINUTES: int | None = Field(default=30)
+    CALENDAR_WORKING_HOURS_END: int | None = Field(default=17)  # 5 PM
+    CALENDAR_WORKING_HOURS_START: int | None = Field(default=9)  # 9 AM
+    CALENDAR_SLOT_DURATION_MINUTES: int | None = Field(default=30)  # 30 Min
 
 
 SETTINGS = Settings()  # type: ignore
