@@ -52,7 +52,7 @@ class Settings(BaseSettings):
 
     PG_VECTOR_DB_URL: PostgresDsn
 
-    VECTOR_DB_PROVIDER: str = Field(default=VECTOR_DB_PROVIDERS.PG_VECTOR.value)
+    VECTOR_DB_PROVIDER: str = Field(default=VECTOR_DB_PROVIDERS.CHROMADB.value)
     VECTOR_DB_COLLECTION_NAME: str = Field(default="documents")
 
     EMBEDDING_MODEL: str = Field(default="all-MiniLM-L6-v2")
@@ -60,6 +60,7 @@ class Settings(BaseSettings):
     EMBEDDING_PROVIDER: str = Field(default="sentence-transformers/all-MiniLM-L6-v2")
     EMBEDDING_PROVIDER_API_KEY: str | None = Field(min_length=15, default=None)
 
+    BROKER_HOST: PostgresDsn
     REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 
     RECAPTCHA_SECRET_KEY: str | None = Field(default=None, min_length=5)

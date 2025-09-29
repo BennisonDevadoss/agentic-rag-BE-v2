@@ -4,8 +4,9 @@ from config.settings import SETTINGS
 
 celery_app = Celery(
     "worker",
-    broker=SETTINGS.REDIS_BASE_URL,
+    broker=f"sqla+{str(SETTINGS.BROKER_HOST)}",
     backend=f"db+{SETTINGS.DATABASE_URL}",
+    # broker=SETTINGS.REDIS_BASE_URL,
     # backend=SETTINGS.REDIS_BASE_URL,
 )
 
