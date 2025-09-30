@@ -61,6 +61,7 @@ class Settings(BaseSettings):
     EMBEDDING_PROVIDER_API_KEY: str | None = Field(min_length=15, default=None)
 
     BROKER_HOST: PostgresDsn
+    MAX_RETRIES: int = Field(default=3, ge=0)
     REDIS_BASE_URL: str = Field(default="redis://localhost:6379/0")
 
     RECAPTCHA_SECRET_KEY: str | None = Field(default=None, min_length=5)
