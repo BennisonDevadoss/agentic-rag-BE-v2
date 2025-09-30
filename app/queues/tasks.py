@@ -5,12 +5,13 @@ from celery import Task
 from .worker import celery_app
 from config.logger import logger
 from utils.crawler import crawl_urls_task_async
+from config.settings import SETTINGS
 from config.vector_db import vector_db
 
 
 class BaseTask(Task):
     autoretry_for = (Exception,)  # Retry for all unhandled exceptions
-    retry_kwargs = {"max_retries": 3, "countdown": 10}
+    retry_kwargs = {"max_retries": SETTINGS.MAX_RETRIES, "countdown": 10}
     retry_backoff = True  # Exponential backoff
     retry_jitter = True  # Add random jitter to avoid thundering herd
     default_retry_delay = 10  # seconds
