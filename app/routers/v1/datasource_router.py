@@ -9,9 +9,27 @@ from schemas.datasource_schema import (
     CrawlResponse,
     FileUploadResponse,
     TaskStatusResponse,
+    TempFileUploadResponse,
 )
 
 datasource_router = APIRouter(prefix="/datasource", tags=["datasource"])
+
+
+@datasource_router.post(
+    "/upload/temp",
+    response_model=TempFileUploadResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+async def upload_file(
+    collection_name: Annotated[str, Form(...)], file: UploadFile = File(...)
+) -> FileUploadResponse:
+    try:
+        return TempFileUploadResponse(
+            message=datasource_service.upload_file(collection_name, file)
+        )
+    except Exception as e:
+        logger.exception(e)
+        raise e
 
 
 @datasource_router.post(
@@ -36,9 +54,7 @@ async def upload_file(
 ) -> FileUploadResponse:
     try:
         task = datasource_service.start_file_upload_task(collection_name, file)
-
         return FileUploadResponse(message="File processing started", task_id=task.id)
-
     except Exception as e:
         logger.exception(e)
         raise e
