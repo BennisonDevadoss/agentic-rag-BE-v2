@@ -16,6 +16,10 @@ class FileUploadResponse(BaseModel):
     task_id: str
 
 
+class TempFileUploadResponse(BaseModel):
+    message: str
+
+
 class TaskStatusResponse(BaseModel):
     status: str
     task_id: str
